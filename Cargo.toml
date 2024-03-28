@@ -1,0 +1,82 @@
+[package]
+name = "slint-futuresdr-demo"
+edition = "2021"
+publish = false
+authors = ["Julian Dickert <julian@systemscape.de>"]
+license = "MIT"
+
+default-run = "run_plot"
+
+[features]
+default = ["svg", "futuresdr_integrated"]
+# Can be enabled independently and switches from (faster) bitmap backend to (slower) SVG backend
+svg = ["plotters-svg"]
+# Full featureset, selfcontained: Stream data from FutureSDR to Plotters via channel
+futuresdr_integrated = ["futuresdr", "rand"]
+# Record FutureSDR data to a file for use with `replay_vec` feature
+record_to_file = ["futuresdr", "rand", "const-gen"]
+# Playback data recorded with `record_to_file` feature
+replay_vec = []
+# Generate data with FutureSDR and transmit over websocket
+websocket_tx = ["futuresdr", "rand"]
+# Receive and display data from websocket
+websocket_rx = ["tokio-tungstenite-wasm", "futures-util"]
+
+
+[[bin]]
+name = "run_plot"
+
+[[bin]]
+name = "websocket_tx"
+required-features = ["websocket_tx"]
+
+[[bin]]
+name = "record_to_file"
+required-features = ["record_to_file"]
+
+
+[dependencies]
+# Our GUI framework
+slint = "1.5.1"
+
+# Plotting library
+plotters = { version = "0.3.5", default-features = false, features = [
+    "area_series", "bitmap_backend", "fontconfig-dlopen", "ttf"
+] }
+
+# SVG plotting backend
+plotters-svg = { version = "0.3.5", optional = true }
+
+# Logging facility
+log = "0.4.21"
+
+# SDR runtime for data generation
+futuresdr = { git = "https://github.com/FutureSDR/FutureSDR.git", rev = "66b11d599595e6a11f3bf1bcc0935eb50f5f3ff8", optional = true }
+# For random noise generation
+rand = { version = "0.8.5", optional = true, default-features = false, features = ["std_rng"] }
+
+# Websocket receiver utilities
+tokio-tungstenite-wasm = { version = "0.3.1", optional = true }
+futures-util = { version = "0.3.30", optional = true }
+
+# Used to store the vector to a .rs file
+const-gen = { version = "1.6.4", optional = true, default-features = false, features = ["std"] }
+
+# Tokio runtime is needed on non-wasm targets
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tokio = { version = "1", default-features = false, features = ["full"] }
+
+
+[build-dependencies]
+slint-build = { version = "1.5.1" }
+
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+web-sys = { version = "=0.3.67", features = ["console"] }
+console_error_panic_hook = "0.1.5"
+console_log = { version = "1.0", features = ["color"] }
+gloo-timers = { version = "0.3.0", features = ["futures"] }
+wasm-bindgen-futures = "0.4.42"
+
+# For custom bitmap backend without text
+plotters-backend = { version = "0.3.5" }

@@ -1,0 +1,181 @@
+import { Button,  LineEdit, Slider, GroupBox, HorizontalBox, SpinBox,Switch, VerticalBox } from "std-widgets.slint";
+
+export global PlotMeta {
+    in-out property <float> max-value;
+    in-out property <float> min-value;
+}
+
+component MySpinBox {
+    in property <int> default-value;
+    in property <string> label;
+    in-out property <int> value: default-value;
+    in-out property <int> maximum: 10000;
+    in-out property <int> minimum;
+
+    callback edited(int);
+
+    VerticalLayout {
+        padding: 10px;
+        spacing: 10px;
+        alignment: start;
+        Text {
+            horizontal-alignment: center;
+            text: label;
+        }
+
+        VerticalLayout {
+            HorizontalLayout {
+                edit := LineEdit {
+                    width: 75px;
+                    text: root.value;
+                    accepted => {
+                        if (!self.text.is-float()) {
+                            self.text = root.value;
+                        }
+                    }
+
+                    edited => {
+                        if (self.text.is-float()) {
+                            root.update-value(self.text.to-float());
+                        }
+                    }
+                }
+
+                Button {
+                    text: "+";
+                    clicked => {
+                        increment();
+                    }
+                }
+
+                Button {
+                    text: "-";
+                    clicked => {
+                        decrement();
+                    }
+                }
+            }
+
+            // Some padding around the reset button
+            Rectangle {
+                width: 15px;
+            }
+
+            Button {
+                text: "Reset";
+                clicked => {
+                    reset()
+                }
+            }
+        }
+    }
+
+    // Copied from https://github.com/slint-ui/slint/blob/d5d772dcbdf384384c367e296df8de3d44424e49/internal/compiler/widgets/fluent-base/spinbox.slint#L128
+    // Until Slint fixes this internally
+    public function update-value(value: int){
+        if (value >= root.minimum && value <= root.maximum) {
+            root.value = value;
+            root.edited(value);
+        }
+        edit.text = root.value;
+    }
+
+    public function increment(){
+        root.update-value(root.value + 1);
+    }
+
+    public function decrement(){
+        root.update-value(root.value - 1);
+    }
+
+    public function reset(){
+        root.update-value(default-value);
+    }
+}
+
+export component MainWindow inherits Window {
+    in property <image> plot-frame <=> image.source;
+    out property <length> plot-width <=> image-frame.width;
+    out property <length> plot-height <=> image-frame.height;
+    in-out property <int> y-axis-min <=> y-min.value;
+    in-out property <int> y-axis-max <=> y-max.value;
+    in-out property <int> noise <=> noise.value;
+
+    in-out property <bool> y-auto-update <=> y-auto-update.checked;
+    in-out property <bool> plot-enable <=> plot-enable.checked;
+
+    callback y-auto-clicked <=> y-auto.clicked;
+    callback plot-enable-toggled <=> plot-enable.toggled;
+    callback noise-edited <=> noise.edited;
+
+    title: "Slint Plotter Integration Example";
+    preferred-width: 1000px;
+    preferred-height: 750px;
+
+    VerticalLayout {
+        HorizontalLayout {
+            vertical-stretch: 1;
+            HorizontalLayout {
+                alignment: space-between;
+
+                VerticalLayout {
+                    alignment: start;
+                    y-min := MySpinBox {
+                        default-value: 0;
+                        label: "Y-Axis min";
+                    }
+
+                    y-max := MySpinBox {
+                        default-value: 500;
+                        label: "Y-Axis max";
+                    }
+
+                    VerticalLayout {
+                        spacing: 20px;
+                        alignment: space-around;
+                        padding: 10px;
+                        y-auto := Button {
+                            text: "Auto Range Once";
+                            enabled: !y-auto-update.checked;
+                            clicked => {
+                                y-max.update_value(PlotMeta.max-value);
+                                y-min.update_value(PlotMeta.min-value);
+                            }
+                        }
+
+                        y-auto-update := Switch {
+                            text: "Auto Ranging";
+                            checked: false;
+                        }
+
+                        plot-enable := Switch {
+                            text: "Enable Plot";
+                            checked: false;
+                        }
+
+                        noise := MySpinBox {
+                            default-value: 10;
+                            minimum: 1;
+                            label: "Noise";
+                        }
+                    }
+                }
+            }
+
+            image-frame := Rectangle {
+                background: lightgray;
+                horizontal-stretch: 1;
+                vertical-stretch: 1;
+                min-width: 200px;
+                min-height: 200px;
+                preferred-width: 100%;
+                preferred-height: 100%;
+
+                image := Image {
+                    height: parent.height - 20px;
+                    width: parent.width - 20px;
+                }
+            }
+        }
+    }
+}

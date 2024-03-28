@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <!--
+    <link data-trunk rel="rust" data-bin="run_plot" data-wasm-opt="4" data-cargo-features="websocket_rx"
+          data-cargo-no-default-features="false" data-weak-refs data-reference-types/>
+          -->
+    <link data-trunk rel="rust" data-bin="run_plot" data-wasm-opt="4" data-cargo-features="futuresdr_integrated,svg"
+          data-cargo-no-default-features="false" data-weak-refs data-reference-types/>
+
+</head>
+
+<style>
+    body {
+        background: #182841;
+    }
+
+    #container {
+        margin: 50px;
+        text-align: center;
+    }
+
+    #canvas {
+        width: 80vw !important;
+        height: 60vh !important;
+        max-width: 1400px !important;
+        outline: none;
+    }
+
+</style>
+
+<body>
+<div id="container">
+    <canvas id="canvas"></canvas>
+</div>
+</body>
+
+</html>

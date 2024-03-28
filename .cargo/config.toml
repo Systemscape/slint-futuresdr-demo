@@ -1,0 +1,5 @@
+[env]
+SLINT_NO_QT="1"
+
+[build]
+rustflags = ["--cfg=web_sys_unstable_apis", "-C", "target-cpu=generic"]

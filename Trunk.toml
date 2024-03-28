@@ -1,0 +1,5 @@
+[build]
+target = "index.html"
+dist = "dist"
+filehash = false
+inject_scripts = true

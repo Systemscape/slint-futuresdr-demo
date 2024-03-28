@@ -6,6 +6,7 @@ authors = ["Julian Dickert <julian@systemscape.de>"]
 license = "MIT"
 
 default-run = "run_plot"
+version = "0.1.0"
 
 [features]
 default = ["svg", "futuresdr_integrated"]

@@ -1,15 +1,12 @@
-use futuresdr::anyhow::Result;
-use futuresdr::futures::channel::mpsc::Sender;
-use futuresdr::macros::async_trait;
-use futuresdr::runtime::Block;
-use futuresdr::runtime::BlockMeta;
-use futuresdr::runtime::BlockMetaBuilder;
-use futuresdr::runtime::Kernel;
-use futuresdr::runtime::MessageIo;
-use futuresdr::runtime::MessageIoBuilder;
-use futuresdr::runtime::StreamIo;
-use futuresdr::runtime::StreamIoBuilder;
-use futuresdr::runtime::WorkIo;
+use futuresdr::{
+    anyhow::Result,
+    futures::channel::mpsc::Sender,
+    macros::async_trait,
+    runtime::{
+        Block, BlockMeta, BlockMetaBuilder, Kernel, MessageIo, MessageIoBuilder, StreamIo,
+        StreamIoBuilder, WorkIo,
+    },
+};
 
 /// Send vector of samples from a Flowgraph into a channel.
 ///

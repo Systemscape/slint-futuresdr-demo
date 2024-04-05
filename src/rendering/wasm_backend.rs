@@ -1,6 +1,8 @@
 // Copyright © SixtyFPS GmbH <info@slint.dev>
 // SPDX-License-Identifier: MIT
 
+// File copied from here https://github.com/slint-ui/slint/blob/dab9a4fc2e3c9d84ee17d01b18e1adf6b0b6428b/examples/plotter/wasm_backend.rs
+
 use plotters_backend::*;
 
 pub struct BackendWithoutText<ForwardedBackend: DrawingBackend> {

@@ -1,6 +1,6 @@
 use log::info;
-use slint_futuresdr_demo::{wait_for_samples, MainWindow};
 use slint::ComponentHandle;
+use slint_futuresdr_demo::{wait_for_samples, MainWindow};
 
 #[cfg(feature = "record_to_file")]
 compile_error!("Must run `record_to_file` bin when spcifying `record_to_file` feature");

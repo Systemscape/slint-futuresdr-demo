@@ -1,6 +1,6 @@
-use futuresdr::log::trace;
 use futuresdr::{
     anyhow::Result,
+    log::trace,
     macros::{async_trait, message_handler},
     num_complex::Complex32,
     runtime::{

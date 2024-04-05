@@ -1,19 +1,14 @@
 use const_gen::{const_declaration, CompileConst};
 use futuresdr::{
     anyhow::Result,
-    blocks::Apply,
-    blocks::Fft,
-    blocks::FftDirection,
-    blocks::SignalSourceBuilder,
-    blocks::Throttle,
-    blocks::{Head, VectorSink},
+    blocks::{Apply, Fft, FftDirection, Head, SignalSourceBuilder, Throttle, VectorSink},
     macros::connect,
     num_complex::Complex32,
     runtime::Flowgraph,
     runtime::Runtime,
 };
-use slint_futuresdr_demo::FFT_SIZE;
 use rand::Rng;
+use slint_futuresdr_demo::FFT_SIZE;
 
 fn main() -> Result<()> {
     let mut fg = Flowgraph::new();
